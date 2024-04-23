@@ -13,6 +13,13 @@ DELTA = {
     pg.K_RIGHT: (+5, 0),
 }
 def game_over(screen:pg.Surface):
+    """
+    こうかとんに爆弾が着弾した際に，
+    画面をブラックアウトし，
+    泣いているこうかとん画像と
+    「Game Over」の文字列を
+    5秒間表示させる関数を実装する！
+    """
     blackout = pg.Surface((WIDTH, HEIGHT))
     pg.draw.rect(blackout, (0, 0, 0), pg.Rect(0, 0, WIDTH, HEIGHT))
     blackout.set_alpha(128)
@@ -36,13 +43,8 @@ def game_over(screen:pg.Surface):
     pg.display.update()
     time.sleep(5)
 
-    
 
-    
-
-
-
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))#現在の作業ディレクトリを、現在のスクリプトファイルが存在するディレクトリに変更するためのもの
 
 def check_bound(obj_rct:pg.Rect):
     """
