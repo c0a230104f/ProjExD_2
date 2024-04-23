@@ -4,7 +4,7 @@ import random
 import pygame as pg
 
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1200, 800
 DELTA = {
     pg.K_UP: (0, -5),
     pg.K_DOWN: (0, +5),
@@ -13,6 +13,18 @@ DELTA = {
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def check_bound(obj_rct:pg.Rect):
+    """
+    こうかとんRect：または：爆弾Rectの画面内外用の関数
+    引数：こうかとんRect：または：爆弾Rect
+    戻り値：横方向判定結果：縦方向判定結果 ()   
+    """
+    yoko, tate = True, True
+    if obj_rct.left < 0 or WIDTH < obj_rct.right:
+        yoko = False
+    if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
+        tate = False
+    return yoko, tate
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -22,7 +34,7 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 900, 400
     bd_img = pg.Surface((20, 20))
-    bd_img.set_colorkey(255)
+    bd_img.set_colorkey(0)
     pg.draw.circle(bd_img, (255, 0, 0), (10, 10), 10)
     bd_rct = bd_img.get_rect()
     bd_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
@@ -42,11 +54,17 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
-        
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bd_rct.move_ip(vx, vy)
         screen.blit(bd_img, bd_rct)
+        yoko, tate = check_bound(bd_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         pg.display.update()
         tmr += 1
         clock.tick(50)
